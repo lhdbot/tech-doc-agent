@@ -60,6 +60,10 @@ python main.py "..." --auto
 # 省钱快跑：关闭调研和审校
 python main.py "..." --no-research --no-review
 
+# 自备调研材料：不触发任何联网搜索，直接用你调研好的文件
+# （适合不方便让模型联网的场景——自己用其他工具调研，存成 md 喂给它）
+python main.py "..." --research-file my-research.md
+
 # 调整并行度 / 输出目录
 python main.py "..." --workers 8 --output my_docs
 ```

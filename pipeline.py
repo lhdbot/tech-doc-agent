@@ -71,13 +71,17 @@ class DocPipeline:
     def __init__(self, orchestrator, writer, out_root: str = "docs",
                  interactive: bool = True, max_workers: int = 6,
                  searcher=None, reviewer=None,
-                 enable_research: bool = True, enable_review: bool = True):
+                 enable_research: bool = True, enable_review: bool = True,
+                 research_override: Optional[str] = None):
         self.orchestrator = orchestrator  # 负责澄清/大纲/调研蒸馏/摘要
         self.writer = writer              # 负责章节撰写（可与编排者不同模型）
         self.reviewer = reviewer or orchestrator  # 负责章节审校
         self.searcher = searcher          # tools.web_search.Searcher，None 时跳过调研
         self.enable_research = enable_research
         self.enable_review = enable_review
+        # 用户自备的调研材料（如用其他工具调研后保存的 md 文件内容）；
+        # 一旦提供，调研阶段直接使用它，完全不触发联网搜索
+        self.research_override = research_override
         self.out_root = Path(out_root)
         self.interactive = interactive
         self.max_workers = max_workers
@@ -341,7 +345,15 @@ class DocPipeline:
         out_dir = self.out_root / ("%s-%s" % (_slug(topic), datetime.date.today().isoformat()))
         out_dir.mkdir(parents=True, exist_ok=True)
         answers = self.clarify(topic)
-        research = self.research(topic, answers, out_dir)
+        if self.research_override is not None:
+            # 用户自备调研材料：直接使用，不触发任何联网搜索
+            research = self.research_override.strip()
+            if research:
+                (out_dir / "research.md").write_text(
+                    "# 调研笔记（用户提供）\n\n%s\n" % research, encoding="utf-8")
+                print("\n=== 使用用户提供的调研材料（跳过联网搜索）===")
+        else:
+            research = self.research(topic, answers, out_dir)
         outline = self.outline(topic, answers, research)
         sections = self.write_sections(topic, answers, research, outline, out_dir)
         sections = self.polish_sections(outline, sections, out_dir)
