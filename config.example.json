@@ -1,5 +1,9 @@
 {
   "default": "deepseek",
+  "search": {
+    "backend": "duckduckgo",
+    "tavily_api_key": "${TAVILY_API_KEY}"
+  },
   "profiles": {
     "deepseek": {
       "base_url": "https://api.deepseek.com",
