@@ -1,0 +1,30 @@
+{
+  "default": "deepseek",
+  "profiles": {
+    "deepseek": {
+      "base_url": "https://api.deepseek.com",
+      "api_key": "${DEEPSEEK_API_KEY}",
+      "model": "deepseek-chat"
+    },
+    "kimi": {
+      "base_url": "https://api.moonshot.cn/v1",
+      "api_key": "${MOONSHOT_API_KEY}",
+      "model": "kimi-k2-0905-preview"
+    },
+    "qwen": {
+      "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "api_key": "${DASHSCOPE_API_KEY}",
+      "model": "qwen-plus"
+    },
+    "openai": {
+      "base_url": "https://api.openai.com/v1",
+      "api_key": "${OPENAI_API_KEY}",
+      "model": "gpt-4o-mini"
+    },
+    "local": {
+      "base_url": "http://localhost:11434/v1",
+      "api_key": "ollama",
+      "model": "qwen2.5:14b"
+    }
+  }
+}
